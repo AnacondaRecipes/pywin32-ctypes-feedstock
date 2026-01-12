@@ -29,6 +29,7 @@ test:
   requires:
     - pip
     - pytest
+    - pywin32
   commands:
     - pip check
     - pytest --pyargs win32ctypes.tests
