@@ -23,6 +23,9 @@ requirements:
   run:
     - python
 
+# E           win32ctypes.pywin32.pywintypes.error: (1168, 'CredEnumerate', 'Element not found.')
+{% set deselect_tests = " --deselect=test_win32cred.py::TestCred::test_enumerate_all" %}
+
 test:
   imports:
     - win32ctypes
@@ -32,7 +35,7 @@ test:
     - pywin32
   commands:
     - pip check
-    - pytest --pyargs win32ctypes.tests
+    - pytest --pyargs win32ctypes.tests {{ deselect_tests }}
 
 about:
   home: https://github.com/enthought/pywin32-ctypes
