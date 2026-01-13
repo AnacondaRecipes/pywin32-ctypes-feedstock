@@ -1,16 +1,17 @@
-{% set version = "0.2.2" %}
+{% set version = "0.2.3" %}
+{% set name = "pywin32-ctypes" %}
 
 package:
-  name: pywin32-ctypes
+  name: {{ name }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/p/pywin32-ctypes/pywin32-ctypes-{{ version }}.tar.gz
-  sha256: 3426e063bdd5fd4df74a14fa3cf80a0b42845a87e1d1e81f6549f9daec593a60
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: d162dc04946d704503b2edc4d55f3dba5c1d539ead017afa00142c38b9885755
 
 build:
   number: 0
-  skip: True  # [not win or py<36]
+  skip: true  # [not win or py<36]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -22,13 +23,19 @@ requirements:
   run:
     - python
 
+# E           win32ctypes.pywin32.pywintypes.error: (1168, 'CredEnumerate', 'Element not found.')
+{% set deselect_tests = " --deselect=test_win32cred.py::TestCred::test_enumerate_all" %}
+
 test:
   imports:
     - win32ctypes
-  commands:
-    - pip check
   requires:
     - pip
+    - pytest
+    - pywin32
+  commands:
+    - pip check
+    - pytest --pyargs win32ctypes.tests {{ deselect_tests }}
 
 about:
   home: https://github.com/enthought/pywin32-ctypes
